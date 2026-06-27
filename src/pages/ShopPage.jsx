@@ -1,32 +1,37 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useShop } from '../context/ShopContext';
 import PetCard from '../components/PetCard';
 import { CardFlipProvider } from '../context/CardFlipContext';
 import { gsap } from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { useNavigate } from 'react-router-dom';
-import { HeartPulse, ArrowRight } from 'lucide-react';
+import { HeartPulse, ArrowRight, ChevronLeft, Fish, Dog, Cat, Bird, Package, Compass } from 'lucide-react';
+
+const categoryIcons = {
+  'Fish': <Fish size={40} className="text-blue-500" />,
+  'Dogs': <Dog size={40} className="text-orange-500" />,
+  'Cats': <Cat size={40} className="text-pink-500" />,
+  'Birds': <Bird size={40} className="text-yellow-500" />,
+  'Small Animals': <Compass size={40} className="text-green-500" />,
+  'Supplies': <Package size={40} className="text-purple-500" />
+};
 
 const ShopPage = () => {
   const { pets } = useShop();
   const { lang } = useLanguage();
   const navigate = useNavigate();
-  const titleRef = useRef(null);
   const bannerRef = useRef(null);
   const iconRef = useRef(null);
   const gridRef = useRef(null);
+  
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
 
   useEffect(() => {
-    // Title animation
-    gsap.fromTo(titleRef.current, 
-      { opacity: 0, y: -20 }, 
-      { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
-    );
-    
     // Banner entrance animation
     gsap.fromTo(bannerRef.current,
       { opacity: 0, y: 30, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.2)', delay: 0.2 }
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.2)' }
     );
 
     // Continuous floating for banner
@@ -46,23 +51,52 @@ const ShopPage = () => {
       yoyo: true,
       ease: 'power1.inOut'
     });
+  }, []);
 
-    // Grid stagger entrance
-    if (gridRef.current) {
+  // Compute Categories
+  const categories = useMemo(() => {
+    return [...new Set(pets.map(p => p.category))];
+  }, [pets]);
+
+  // Compute Subcategories for selected category
+  const subcategories = useMemo(() => {
+    if (!selectedCategory) return [];
+    const filtered = pets.filter(p => p.category === selectedCategory);
+    const subs = [...new Set(filtered.map(p => p.subcategory))];
+    // Skip subcategory level if there's only one subcategory that matches the category name
+    if (subs.length === 1 && subs[0] === selectedCategory) return [];
+    return subs;
+  }, [selectedCategory, pets]);
+
+  // Compute Pets to display
+  const displayedPets = useMemo(() => {
+    if (selectedSubcategory) {
+      return pets.filter(p => p.category === selectedCategory && p.subcategory === selectedSubcategory);
+    }
+    if (selectedCategory && subcategories.length === 0) {
+      // Direct render (e.g. Dogs, Cats, Small Animals)
+      return pets.filter(p => p.category === selectedCategory);
+    }
+    return [];
+  }, [selectedCategory, selectedSubcategory, pets, subcategories]);
+
+  // Animate grid children on state change
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.children.length > 0) {
       gsap.fromTo(gridRef.current.children,
-        { opacity: 0, y: 50, scale: 0.9 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          scale: 1,
-          duration: 0.8, 
-          stagger: 0.1, 
-          ease: 'power3.out',
-          delay: 0.3
-        }
+        { opacity: 0, y: 30, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.05, ease: 'power2.out' }
       );
     }
-  }, []);
+  }, [selectedCategory, selectedSubcategory]);
+
+  const handleBack = () => {
+    if (selectedSubcategory) {
+      setSelectedSubcategory(null);
+    } else if (selectedCategory) {
+      setSelectedCategory(null);
+    }
+  };
 
   return (
     <CardFlipProvider>
@@ -102,16 +136,75 @@ const ShopPage = () => {
           </button>
         </div>
 
-        <div className="flex items-center justify-center gap-4 mb-10 mt-6 relative z-10">
-          <h1 ref={titleRef} className="text-4xl md:text-5xl font-black text-gray-900 text-center tracking-tight drop-shadow-sm">
-            {lang === 'en' ? 'Our Beloved Pets' : 'எங்கள் அன்பு செல்லப்பிராணிகள்'}
-          </h1>
+        {/* Dynamic Header & Back Button */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 mt-6 relative z-10 border-b-2 border-gray-100 pb-6">
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {selectedCategory && (
+              <button 
+                onClick={handleBack}
+                className="p-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-2xl transition-colors active:scale-95 shadow-sm"
+              >
+                <ChevronLeft size={24} />
+              </button>
+            )}
+            <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight drop-shadow-sm">
+              {!selectedCategory 
+                ? (lang === 'en' ? 'Browse Categories' : 'வகைகளை உலாவுக') 
+                : selectedSubcategory 
+                  ? selectedSubcategory 
+                  : selectedCategory}
+            </h1>
+          </div>
         </div>
         
-        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 relative z-10">
-          {pets.map(pet => (
-            <PetCard key={pet.id} pet={pet} />
-          ))}
+        {/* Dynamic Grid Rendering */}
+        <div ref={gridRef} className="relative z-10">
+          
+          {/* Level 1: Categories */}
+          {!selectedCategory && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {categories.map(cat => (
+                <div 
+                  key={cat} 
+                  onClick={() => setSelectedCategory(cat)}
+                  className="bg-white rounded-[2rem] p-8 cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-col items-center justify-center gap-4 group text-center"
+                >
+                  <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center group-hover:scale-110 group-hover:bg-red-50 transition-all duration-300">
+                    {categoryIcons[cat] || <Compass size={40} className="text-gray-400" />}
+                  </div>
+                  <h3 className="text-xl font-black text-gray-800">{cat}</h3>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Level 2: Subcategories */}
+          {selectedCategory && !selectedSubcategory && subcategories.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {subcategories.map(sub => (
+                <div 
+                  key={sub} 
+                  onClick={() => setSelectedSubcategory(sub)}
+                  className="bg-white rounded-[2rem] p-6 cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-col items-center justify-center gap-4 group text-center"
+                >
+                  <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300 text-blue-500">
+                    <Compass size={28} />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-800">{sub}</h3>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Level 3: Pets / Items */}
+          {((selectedCategory && subcategories.length === 0) || selectedSubcategory) && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {displayedPets.map(pet => (
+                <PetCard key={pet.id} pet={pet} />
+              ))}
+            </div>
+          )}
+
         </div>
       </div>
     </CardFlipProvider>
