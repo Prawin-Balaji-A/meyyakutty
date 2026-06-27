@@ -32,7 +32,7 @@ const AboutPage = () => {
           
           <h2 className="text-2xl font-black text-gray-800 mb-4">Our Story</h2>
           <p className="text-lg text-gray-600 leading-relaxed font-medium">
-            Welcome to Meeya Kutty Pet & Meat Shop! Since 2020, we have been committed to providing healthy pets, quality pet supplies, and fresh meat products. We specialize in pigeons and offer a wide range of birds, fish, dogs, cats, pet accessories, and pet food. Our mission is to deliver trusted products and excellent service to pet lovers and families.
+            Welcome to Meeya Kutty Pet Shop! Since 2020, we have been committed to providing healthy pets and quality pet supplies. We specialize in pigeons and offer a wide range of birds, fish, dogs, cats, pet accessories, and pet food. Our mission is to deliver trusted products and excellent service to pet lovers and families.
           </p>
         </div>
 

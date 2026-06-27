@@ -83,7 +83,7 @@ const Layout = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col">
+      <main className="flex-grow flex flex-col w-full">
         <Outlet />
       </main>
 
