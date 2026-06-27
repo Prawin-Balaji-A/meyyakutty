@@ -96,13 +96,13 @@ const initialPets = [
   { id: 'sup11', breed: 'Tank Heater', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 800, imageUrl: '/images/clean/fish_accessories_fisk_tank_heater.jpg', description: 'Aquarium Heater.', inStock: true, stockQuantity: 15 },
   { id: 'sup12', breed: 'Tank Sand', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 250, imageUrl: '/images/clean/fish_tank_sand.jpg', description: 'Aquarium Sand.', inStock: true, stockQuantity: 40 },
 
-  { id: 'sup13', breed: 'Bird Cage', category: 'Supplies', subcategory: 'Bird Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 1500, imageUrl: '/images/clean/bird_cage.jpg', description: 'Spacious Bird Cage.', inStock: true, stockQuantity: 10 },
-  { id: 'sup14', breed: 'Bird Seed Mix', category: 'Supplies', subcategory: 'Bird Supplies', gender: 'Food', ageMonths: 0, isVaccinated: false, price: 200, imageUrl: '/images/clean/bird_seed.jpg', description: 'Premium Bird Seed.', inStock: true, stockQuantity: 30 },
+  { id: 'sup13_v2', breed: 'Bird Travel Box', category: 'Supplies', subcategory: 'Bird Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 1500, imageUrl: '/images/clean/bird_accessories_travel_box.jpg', description: 'Safe Bird Travel Box.', inStock: true, stockQuantity: 10 },
+  { id: 'sup14_v2', breed: 'Bird Food Tray', category: 'Supplies', subcategory: 'Bird Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 200, imageUrl: '/images/clean/bird_food_trae.jpg', description: 'Premium Bird Food Tray.', inStock: true, stockQuantity: 30 },
 
-  { id: 'sup15', breed: 'Hamster Wheel', category: 'Supplies', subcategory: 'Hamster Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 350, imageUrl: '/images/clean/hamster_wheel.jpg', description: 'Silent Hamster Wheel.', inStock: true, stockQuantity: 20 },
-  { id: 'sup16', breed: 'Hamster Mix Food', category: 'Supplies', subcategory: 'Hamster Supplies', gender: 'Food', ageMonths: 0, isVaccinated: false, price: 250, imageUrl: '/images/clean/hamster_food.jpg', description: 'Nutritious Hamster Food.', inStock: true, stockQuantity: 25 },
+  { id: 'sup15_v2', breed: 'Hamster Wheel', category: 'Supplies', subcategory: 'Hamster Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 350, imageUrl: '/images/clean/small_animal_wheel.jpg', description: 'Silent Hamster Wheel.', inStock: true, stockQuantity: 20 },
+  { id: 'sup16_v2', breed: 'Hamster Cage', category: 'Supplies', subcategory: 'Hamster Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 1250, imageUrl: '/images/clean/small_animal_cage.jpg', description: 'Spacious Hamster Cage.', inStock: true, stockQuantity: 25 },
 
-  { id: 'sup17', breed: 'Rabbit Pellet Food', category: 'Supplies', subcategory: 'Other Pet Supplies', gender: 'Food', ageMonths: 0, isVaccinated: false, price: 300, imageUrl: '/images/clean/rabbit_food.jpg', description: 'Healthy Rabbit Pellets.', inStock: true, stockQuantity: 15 }
+  { id: 'sup17_v2', breed: 'Wood Shavings', category: 'Supplies', subcategory: 'Other Pet Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 300, imageUrl: '/images/clean/small_animal_wood_shaves.jpg', description: 'Healthy Wood Shavings bedding.', inStock: true, stockQuantity: 15 }
 ];
 
 export const ShopProvider = ({ children }) => {
