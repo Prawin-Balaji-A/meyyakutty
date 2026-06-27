@@ -124,6 +124,10 @@ export const ShopProvider = ({ children }) => {
           return pet;
         });
 
+        // Filter out old broken image items
+        const brokenIds = ['sup13', 'sup14', 'sup15', 'sup16', 'sup17'];
+        migrated = migrated.filter(pet => !brokenIds.includes(pet.id));
+
         // Merge any new initialPets that aren't in local storage yet
         const existingIds = new Set(migrated.map(p => p.id));
         const missingInitial = initialPets.filter(p => !existingIds.has(p.id));
