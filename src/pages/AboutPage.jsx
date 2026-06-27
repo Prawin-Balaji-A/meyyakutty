@@ -90,7 +90,7 @@ const AboutPage = () => {
             />
           </div>
           <div className="mt-6 flex justify-between items-center">
-             <p className="text-gray-600 font-medium">Meyyakutty Chicken Corner</p>
+             <p className="text-gray-600 font-medium">Meyyakutty Pet Shop</p>
              <a href="https://www.google.com/maps/place/MEYYAKUTTY+CHICKEN+CORNER/@10.9558569,79.4047693,967m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a55338007452e75:0x3e23fabd9918c749!8m2!3d10.9558569!4d79.4047693!16s%2Fg%2F11w7hh5slq!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noreferrer" className="text-[var(--color-brand-red)] font-bold hover:underline">
                Open in Maps &rarr;
              </a>
