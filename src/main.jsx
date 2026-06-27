@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-import { LanguageProvider } from './context/LanguageContext.jsx'
 import { AdminProvider } from './context/AdminContext.jsx'
 import { ShopProvider } from './context/ShopContext.jsx'
 import { CartProvider } from './context/CartContext.jsx'
@@ -13,19 +12,17 @@ import { NotificationProvider } from './context/NotificationContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <LanguageProvider>
-        <AdminProvider>
-          <ShopProvider>
-            <CartProvider>
-              <OrderProvider>
-                <NotificationProvider>
-                  <App />
-                </NotificationProvider>
-              </OrderProvider>
-            </CartProvider>
-          </ShopProvider>
-        </AdminProvider>
-      </LanguageProvider>
+      <AdminProvider>
+        <ShopProvider>
+          <CartProvider>
+            <OrderProvider>
+              <NotificationProvider>
+                <App />
+              </NotificationProvider>
+            </OrderProvider>
+          </CartProvider>
+        </ShopProvider>
+      </AdminProvider>
     </BrowserRouter>
   </StrictMode>,
 )

@@ -6,30 +6,29 @@ const NotificationContext = createContext();
 export const useNotifications = () => useContext(NotificationContext);
 
 export const NotificationProvider = ({ children }) => {
-  const { lang } = useLanguage();
   
   // Dummy data representing order status notifications
   const initialNotifications = [
     {
       id: 1,
-      title: lang === 'en' ? 'Order Confirmed!' : 'ஆர்டர் உறுதிசெய்யப்பட்டது!',
-      message: lang === 'en' ? 'Your order #ORD-8492 has been confirmed and is being packed.' : 'உங்கள் ஆர்டர் #ORD-8492 உறுதிசெய்யப்பட்டு பேக் செய்யப்படுகிறது.',
+      title: 'Order Confirmed!',
+      message: 'Your order #ORD-8492 has been confirmed and is being packed.',
       time: '2 hours ago',
       read: false,
       type: 'order'
     },
     {
       id: 2,
-      title: lang === 'en' ? 'Out for Delivery' : 'டெலிவரிக்கு தயாராகிறது',
-      message: lang === 'en' ? 'Good news! Your previous order #ORD-7110 is out for delivery today.' : 'நற்செய்தி! உங்கள் முந்தைய ஆர்டர் #ORD-7110 இன்று டெலிவரிக்கு வரவுள்ளது.',
+      title: 'Out for Delivery',
+      message: 'Good news! Your previous order #ORD-7110 is out for delivery today.',
       time: '1 day ago',
       read: true,
       type: 'shipping'
     },
     {
       id: 3,
-      title: lang === 'en' ? 'Flash Sale on Pet Food!' : 'செல்லப்பிராணி உணவில் சிறப்பு தள்ளுபடி!',
-      message: lang === 'en' ? 'Get flat 20% off on premium pet food. Limited time offer.' : 'உயர்தர செல்லப்பிராணி உணவுக்கு 20% தள்ளுபடி. சலுகை குறுகிய காலம் வரை.',
+      title: 'Flash Sale on Pet Food!',
+      message: 'Get flat 20% off on premium pet food. Limited time offer.',
       time: '2 days ago',
       read: true,
       type: 'promo'

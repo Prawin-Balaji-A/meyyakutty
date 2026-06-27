@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
-import { useLanguage } from '../context/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck } from 'lucide-react';
 import { gsap } from 'gsap';
@@ -17,7 +16,6 @@ const categoryIcons = {
 
 const HomePage = () => {
   const { pets } = useShop();
-  const { lang } = useLanguage();
   const navigate = useNavigate();
   const bannerRef = useRef(null);
 
@@ -44,15 +42,15 @@ const HomePage = () => {
       <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 mb-12 relative z-10">
         <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/50 hover:bg-white hover:scale-105 transition-all cursor-default">
           <ShieldCheck size={20} className="text-green-600" />
-          <span className="font-bold text-gray-800 text-sm">{lang === 'en' ? '100% Healthy Pets' : '100% ஆரோக்கியமானவை'}</span>
+          <span className="font-bold text-gray-800 text-sm">'100% Healthy Pets'</span>
         </div>
         <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/50 hover:bg-white hover:scale-105 transition-all cursor-default">
           <ThumbsUp size={20} className="text-blue-600" />
-          <span className="font-bold text-gray-800 text-sm">{lang === 'en' ? 'Verified Breeders' : 'சரிபார்க்கப்பட்டவர்கள்'}</span>
+          <span className="font-bold text-gray-800 text-sm">'Verified Breeders'</span>
         </div>
         <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/50 hover:bg-white hover:scale-105 transition-all cursor-default">
           <Truck size={20} className="text-orange-500" />
-          <span className="font-bold text-gray-800 text-sm">{lang === 'en' ? 'Safe & Quick Delivery' : 'பாதுகாப்பான விநியோகம்'}</span>
+          <span className="font-bold text-gray-800 text-sm">'Safe & Quick Delivery'</span>
         </div>
       </div>
 
@@ -60,13 +58,13 @@ const HomePage = () => {
       <div className="mb-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-black text-gray-900">
-            {lang === 'en' ? "Today's Highlights & Offers" : "இன்றைய சலுகைகள்"}
+            "Today's Highlights & Offers"
           </h2>
           <div 
             onClick={() => navigate('/shop')}
             className="flex items-center gap-1 text-[var(--color-brand-red)] font-bold cursor-pointer hover:underline text-sm md:text-base"
           >
-            <span>{lang === 'en' ? 'View All' : 'அனைத்தையும் பார்க்க'}</span>
+            <span>'View All'</span>
             <ArrowRight size={16} />
           </div>
         </div>
@@ -157,7 +155,7 @@ const HomePage = () => {
       {/* Level 1: Categories */}
       <div className="mb-16">
         <h2 className="text-3xl font-black text-gray-900 mb-8 border-l-4 border-[var(--color-brand-red)] pl-4">
-          {lang === 'en' ? 'Browse by Category' : 'வகைகளை உலாவுக'}
+          'Browse by Category'
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
           {categories.map(cat => {
@@ -207,7 +205,7 @@ const HomePage = () => {
           }}
           className="z-10 px-6 py-3 bg-[var(--color-brand-red)] text-white rounded-xl font-bold shadow-md hover:bg-[var(--color-brand-dark)] transition-colors flex items-center gap-2 whitespace-nowrap"
         >
-          <span>{lang === 'en' ? 'Get Started' : 'தொடங்குங்கள்'}</span>
+          <span>'Get Started'</span>
           <ArrowRight size={18} />
         </button>
       </div>

@@ -1,16 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
-import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { useNotifications } from '../context/NotificationContext';
 import { MessageCircle, ShoppingCart, Home, Store, HeartHandshake, Info, Bell } from 'lucide-react';
 import CartDrawer from './CartDrawer';
 import NotificationDrawer from './NotificationDrawer';
-import { useLocation } from 'react-router-dom';
 
 const Layout = () => {
-  const { lang, toggleLang } = useLanguage();
   const { cartItems } = useCart();
   const { unreadCount } = useNotifications();
   const whatsappRef = useRef(null);
@@ -60,27 +57,21 @@ const Layout = () => {
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-8">
             <Link to="/" className="font-bold text-white hover:text-red-200 transition-colors">
-              {lang === 'en' ? 'Home' : 'முகப்பு'}
+              Home
             </Link>
             <Link to="/shop" className="font-bold text-white hover:text-red-200 transition-colors">
-              {lang === 'en' ? 'Shop' : 'கடை'}
+              Shop
             </Link>
             <Link to="/sell-care" className="font-bold text-white hover:text-red-200 transition-colors">
-              {lang === 'en' ? 'Sell & Care' : 'விற்க & பராமரிக்க'}
+              Sell & Care
             </Link>
             <Link to="/about" className="font-bold text-white hover:text-red-200 transition-colors">
-              {lang === 'en' ? 'About Us' : 'எங்களை பற்றி'}
+              About Us
             </Link>
           </nav>
 
           {/* Action Icons (Visible on all screens) */}
           <div className="flex items-center gap-3 md:gap-6">
-            <button 
-              onClick={toggleLang}
-              className="px-3 py-1 bg-white/20 text-white border border-white/50 rounded-full font-black text-xs shadow-sm hover:bg-white hover:text-[var(--color-brand-red)] transition-colors"
-            >
-              {lang === 'en' ? 'TA' : 'EN'}
-            </button>
             <button 
               onClick={() => setIsNotifOpen(true)}
               className="relative p-1 md:p-2 text-white hover:text-red-200 transition-colors"
@@ -128,19 +119,19 @@ const Layout = () => {
         <div className="flex items-center justify-around h-16">
           <Link to="/" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
             <Home size={24} />
-            <span className="text-[10px] font-bold">{lang === 'en' ? 'Home' : 'முகப்பு'}</span>
+            <span className="text-[10px] font-bold">Home</span>
           </Link>
           <Link to="/shop" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/shop' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
             <Store size={24} />
-            <span className="text-[10px] font-bold">{lang === 'en' ? 'Shop' : 'கடை'}</span>
+            <span className="text-[10px] font-bold">Shop</span>
           </Link>
           <Link to="/sell-care" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/sell-care' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
             <HeartHandshake size={24} />
-            <span className="text-[10px] font-bold">{lang === 'en' ? 'Care' : 'பராமரிப்பு'}</span>
+            <span className="text-[10px] font-bold">Care</span>
           </Link>
           <Link to="/about" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/about' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
             <Info size={24} />
-            <span className="text-[10px] font-bold">{lang === 'en' ? 'About' : 'பற்றி'}</span>
+            <span className="text-[10px] font-bold">About</span>
           </Link>
         </div>
       </nav>

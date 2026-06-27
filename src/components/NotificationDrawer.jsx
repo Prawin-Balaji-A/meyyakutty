@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useNotifications } from '../context/NotificationContext';
-import { useLanguage } from '../context/LanguageContext';
 import { X, Bell, Package, Truck, Tag, Info } from 'lucide-react';
 import { gsap } from 'gsap';
 
 const NotificationDrawer = ({ isOpen, onClose }) => {
   const { notifications, markAllAsRead } = useNotifications();
-  const { lang } = useLanguage();
   const drawerRef = useRef(null);
   const overlayRef = useRef(null);
 
@@ -45,7 +43,7 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-3">
             <Bell size={24} className="text-[var(--color-brand-red)]" />
             <h2 className="text-xl font-black text-gray-800">
-              {lang === 'en' ? 'Notifications' : 'அறிவிப்புகள்'}
+              'Notifications'
             </h2>
           </div>
           <button 
@@ -60,7 +58,7 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
               <Bell size={48} className="mb-4 opacity-20" />
-              <p>{lang === 'en' ? 'No notifications yet.' : 'எந்த அறிவிப்புகளும் இல்லை.'}</p>
+              <p>'No notifications yet.'</p>
             </div>
           ) : (
             notifications.map(notif => (

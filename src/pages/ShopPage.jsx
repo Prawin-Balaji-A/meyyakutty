@@ -3,7 +3,6 @@ import { useShop } from '../context/ShopContext';
 import PetCard from '../components/PetCard';
 import { CardFlipProvider } from '../context/CardFlipContext';
 import { gsap } from 'gsap';
-import { useLanguage } from '../context/LanguageContext';
 import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, Fish, Dog, Cat, Bird, Package, Compass } from 'lucide-react';
 
@@ -18,7 +17,6 @@ const categoryIcons = {
 
 const ShopPage = () => {
   const { pets } = useShop();
-  const { lang } = useLanguage();
   const gridRef = useRef(null);
   
   const [searchParams, setSearchParams] = useSearchParams();
@@ -100,7 +98,7 @@ const ShopPage = () => {
               </button>
             ) : null}
             <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight drop-shadow-sm">
-              {selectedSubcategory ? selectedSubcategory : (selectedCategory ? selectedCategory : (lang === 'en' ? 'Shop All Categories' : 'அனைத்து வகைகளும்'))}
+              {selectedSubcategory ? selectedSubcategory : (selectedCategory ? selectedCategory : ('Shop All Categories'))}
             </h1>
           </div>
         </div>

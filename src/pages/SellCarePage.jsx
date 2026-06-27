@@ -2,11 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import imageCompression from 'browser-image-compression';
 import { useAdmin } from '../context/AdminContext';
-import { useLanguage } from '../context/LanguageContext';
 import { UploadCloud, CheckCircle, X } from 'lucide-react';
 
 const SellCarePage = () => {
-  const { lang } = useLanguage();
   const { addRequest } = useAdmin();
   const [service, setService] = useState('sell'); // 'sell', 'care', 'adopt'
   const [formData, setFormData] = useState({});
@@ -135,7 +133,7 @@ const SellCarePage = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 w-full relative">
       <h1 className="text-4xl font-black text-gray-800 mb-8 text-center">
-        {lang === 'en' ? 'Sell & Care' : 'விற்க & பராமரிக்க'}
+        'Sell & Care'
       </h1>
 
       {/* Service Selector */}
