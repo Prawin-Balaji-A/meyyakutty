@@ -3,14 +3,16 @@ import { Outlet, Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
-import { MessageCircle, ShoppingCart } from 'lucide-react';
+import { MessageCircle, ShoppingCart, Home, Store, HeartHandshake, Info } from 'lucide-react';
 import CartDrawer from './CartDrawer';
+import { useLocation } from 'react-router-dom';
 
 const Layout = () => {
   const { lang, toggleLang } = useLanguage();
   const { cartItems } = useCart();
   const whatsappRef = useRef(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     // Floating WhatsApp animation
@@ -51,8 +53,12 @@ const Layout = () => {
               MEYYAKUTTY
             </span>
           </Link>
-          <nav className="flex items-center gap-6">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-8">
             <Link to="/" className="font-bold text-white hover:text-red-200 transition-colors">
+              {lang === 'en' ? 'Home' : 'முகப்பு'}
+            </Link>
+            <Link to="/shop" className="font-bold text-white hover:text-red-200 transition-colors">
               {lang === 'en' ? 'Shop' : 'கடை'}
             </Link>
             <Link to="/sell-care" className="font-bold text-white hover:text-red-200 transition-colors">
@@ -89,15 +95,37 @@ const Layout = () => {
 
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-      {/* Floating WhatsApp Button */}
+      {/* Floating WhatsApp Button (Adjusted for bottom nav on mobile) */}
       <button
         ref={whatsappRef}
         onClick={handleWhatsAppClick}
-        className="fixed bottom-6 left-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform cursor-pointer flex items-center justify-center"
+        className="fixed bottom-24 md:bottom-6 left-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform cursor-pointer flex items-center justify-center"
         aria-label="Contact us on WhatsApp"
       >
         <MessageCircle size={28} />
       </button>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 pb-safe">
+        <div className="flex items-center justify-around h-16">
+          <Link to="/" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
+            <Home size={24} />
+            <span className="text-[10px] font-bold">{lang === 'en' ? 'Home' : 'முகப்பு'}</span>
+          </Link>
+          <Link to="/shop" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/shop' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
+            <Store size={24} />
+            <span className="text-[10px] font-bold">{lang === 'en' ? 'Shop' : 'கடை'}</span>
+          </Link>
+          <Link to="/sell-care" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/sell-care' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
+            <HeartHandshake size={24} />
+            <span className="text-[10px] font-bold">{lang === 'en' ? 'Care' : 'பராமரிப்பு'}</span>
+          </Link>
+          <Link to="/about" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${location.pathname === '/about' ? 'text-[var(--color-brand-red)]' : 'text-gray-500'}`}>
+            <Info size={24} />
+            <span className="text-[10px] font-bold">{lang === 'en' ? 'About' : 'பற்றி'}</span>
+          </Link>
+        </div>
+      </nav>
     </div>
   );
 };
