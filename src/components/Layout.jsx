@@ -1,0 +1,105 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Outlet, Link } from 'react-router-dom';
+import { gsap } from 'gsap';
+import { useLanguage } from '../context/LanguageContext';
+import { useCart } from '../context/CartContext';
+import { MessageCircle, ShoppingCart } from 'lucide-react';
+import CartDrawer from './CartDrawer';
+
+const Layout = () => {
+  const { lang, toggleLang } = useLanguage();
+  const { cartItems } = useCart();
+  const whatsappRef = useRef(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    // Floating WhatsApp animation
+    const tl = gsap.timeline({ repeat: -1, yoyo: true });
+    tl.to(whatsappRef.current, {
+      y: -10,
+      duration: 2,
+      ease: 'sine.inOut'
+    });
+
+    // Pulse effect
+    gsap.to(whatsappRef.current, {
+      scale: 1.05,
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'power1.inOut',
+      boxShadow: '0 0 15px rgba(37, 211, 102, 0.6)'
+    });
+  }, []);
+
+  const handleWhatsAppClick = () => {
+    const primary = '917200271113';
+    // Deep link directly to WhatsApp API
+    window.open(`https://wa.me/${primary}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header (Mobile App Style App Bar) */}
+      <header className="sticky top-0 z-50 shadow-md bg-[var(--color-brand-red)] text-white">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="bg-white p-1 rounded-full shadow-sm">
+              <img src="/logo.jpg" alt="Meyyakutty Logo" className="h-10 w-10 object-contain rounded-full" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
+            </div>
+            <span className="text-2xl font-black text-white tracking-wider">
+              MEYYAKUTTY
+            </span>
+          </Link>
+          <nav className="flex items-center gap-6">
+            <Link to="/" className="font-bold text-white hover:text-red-200 transition-colors">
+              {lang === 'en' ? 'Shop' : 'கடை'}
+            </Link>
+            <Link to="/sell-care" className="font-bold text-white hover:text-red-200 transition-colors">
+              {lang === 'en' ? 'Sell & Care' : 'விற்க & பராமரிக்க'}
+            </Link>
+            <Link to="/about" className="font-bold text-white hover:text-red-200 transition-colors">
+              {lang === 'en' ? 'About Us' : 'எங்களை பற்றி'}
+            </Link>
+            <button 
+              onClick={toggleLang}
+              className="px-3 py-1 bg-white text-[var(--color-brand-red)] rounded-full font-black text-xs shadow-sm hover:bg-gray-100 transition-colors"
+            >
+              {lang === 'en' ? 'TA' : 'EN'}
+            </button>
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-white hover:text-red-200 transition-colors"
+            >
+              <ShoppingCart size={24} />
+              {cartItems.length > 0 && (
+                <span className="absolute top-0 right-0 w-5 h-5 bg-white text-[var(--color-brand-red)] text-xs font-bold rounded-full flex items-center justify-center -translate-y-1/4 translate-x-1/4 shadow-sm">
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-grow flex flex-col">
+        <Outlet />
+      </main>
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      {/* Floating WhatsApp Button */}
+      <button
+        ref={whatsappRef}
+        onClick={handleWhatsAppClick}
+        className="fixed bottom-6 left-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform cursor-pointer flex items-center justify-center"
+        aria-label="Contact us on WhatsApp"
+      >
+        <MessageCircle size={28} />
+      </button>
+    </div>
+  );
+};
+
+export default Layout;

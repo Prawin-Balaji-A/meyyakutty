@@ -1,0 +1,28 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import './index.css'
+import App from './App.jsx'
+import { LanguageProvider } from './context/LanguageContext.jsx'
+import { AdminProvider } from './context/AdminContext.jsx'
+import { ShopProvider } from './context/ShopContext.jsx'
+import { CartProvider } from './context/CartContext.jsx'
+import { OrderProvider } from './context/OrderContext.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <BrowserRouter>
+      <LanguageProvider>
+        <AdminProvider>
+          <ShopProvider>
+            <CartProvider>
+              <OrderProvider>
+                <App />
+              </OrderProvider>
+            </CartProvider>
+          </ShopProvider>
+        </AdminProvider>
+      </LanguageProvider>
+    </BrowserRouter>
+  </StrictMode>,
+)
