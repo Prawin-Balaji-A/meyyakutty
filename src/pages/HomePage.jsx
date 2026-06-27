@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
-import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck, Rat, Play, PlayCircle } from 'lucide-react';
+import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck, Rat, Play, X, PlayCircle } from 'lucide-react';
 import { gsap } from 'gsap';
 import PetCard from '../components/PetCard';
 
@@ -20,7 +20,13 @@ const HomePage = () => {
   const navigate = useNavigate();
   const bannerRef = useRef(null);
   
-  const [activeVideo, setActiveVideo] = useState('/videos/v1.mp4');
+  const [activeVideo, setActiveVideo] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openVideo = (vid) => {
+    setActiveVideo(vid);
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     // Banner continuous pulse
@@ -54,6 +60,37 @@ const HomePage = () => {
         <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/50 hover:bg-white hover:scale-105 transition-all cursor-default">
           <Truck size={20} className="text-orange-500" />
           <span className="font-bold text-gray-800 text-sm">'Safe & Quick Delivery'</span>
+        </div>
+      </div>
+
+      {/* Live Reels / Video Cards */}
+      <div className="mb-16">
+        <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-6 flex items-center gap-2">
+          <PlayCircle size={28} className="text-[var(--color-brand-red)]" /> 'MeeyaKutty Shorts'
+        </h2>
+        
+        <div className="flex gap-4 overflow-x-auto pb-6 px-2 -mx-2 snap-x snap-mandatory custom-scrollbar">
+          {['v1.mp4', 'v2.mp4', 'v3.mp4', 'v4.mp4', 'v5.mp4'].map((vid, idx) => (
+            <div 
+              key={vid}
+              onClick={() => openVideo(`/videos/${vid}`)}
+              className="snap-start shrink-0 relative w-48 h-80 rounded-3xl overflow-hidden cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200"
+            >
+               {/* Thumbnail from video */}
+               <video src={`/videos/${vid}#t=1`} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+               
+               <div className="absolute inset-0 flex items-center justify-center">
+                 <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/50 group-hover:bg-[var(--color-brand-red)] transition-colors">
+                   <Play size={24} fill="currentColor" className="ml-1" />
+                 </div>
+               </div>
+               
+               <div className="absolute bottom-4 left-4 right-4">
+                 <h3 className="text-white font-bold text-sm drop-shadow-md line-clamp-2">Live Action {idx + 1}</h3>
+               </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -148,47 +185,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Premium Video Player */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-black text-gray-900 mb-8 border-l-4 border-[var(--color-brand-red)] pl-4 flex items-center gap-3">
-          <PlayCircle size={32} className="text-[var(--color-brand-red)]" /> 'MeeyaKutty Live Action'
-        </h2>
-        
-        <div className="bg-black rounded-[2.5rem] p-4 shadow-2xl relative overflow-hidden border border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80 pointer-events-none" />
-          
-          <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-gray-900 shadow-inner">
-            <video 
-              key={activeVideo} // forces reload when active video changes
-              src={activeVideo} 
-              autoPlay 
-              loop 
-              muted 
-              controls
-              controlsList="nodownload"
-              className="w-full h-full object-contain"
-            />
-          </div>
 
-          {/* Video Selector Carousel */}
-          <div className="mt-6 flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
-            {['v1.mp4', 'v2.mp4', 'v3.mp4', 'v4.mp4', 'v5.mp4'].map((vid, idx) => (
-              <button 
-                key={vid}
-                onClick={() => setActiveVideo(`/videos/${vid}`)}
-                className={`shrink-0 relative w-40 h-24 rounded-2xl overflow-hidden transition-all duration-300 border-2 ${activeVideo === `/videos/${vid}` ? 'border-[var(--color-brand-red)] scale-105 shadow-[0_0_15px_rgba(200,16,46,0.5)]' : 'border-gray-800 opacity-60 hover:opacity-100 hover:border-gray-600'}`}
-              >
-                 {/* Provide thumbnail view by loading video and keeping it paused */}
-                 <video src={`/videos/${vid}#t=1`} className="w-full h-full object-cover" />
-                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                   <Play size={24} className={activeVideo === `/videos/${vid}` ? 'text-[var(--color-brand-red)]' : 'text-white'} fill="currentColor" />
-                 </div>
-                 <div className="absolute top-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded">Live Cam {idx + 1}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Sell & Care Slim Banner */}
       <div 
@@ -215,6 +212,28 @@ const HomePage = () => {
           <ArrowRight size={18} />
         </button>
       </div>
+
+      {/* Video Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
+          <button 
+            onClick={() => setIsModalOpen(false)}
+            className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-[var(--color-brand-red)] text-white rounded-full transition-colors z-50"
+          >
+            <X size={32} />
+          </button>
+          
+          <div className="relative w-full max-w-lg aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-800 flex items-center justify-center animate-scale-in">
+            <video 
+              src={activeVideo} 
+              autoPlay 
+              loop 
+              controls
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      )}
 
     </div>
   );
