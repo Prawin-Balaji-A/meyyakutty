@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { Phone, Mail, Instagram, ChevronLeft, MapPin, Clock, Youtube } from 'lucide-react';
+import { Phone, Mail, ChevronLeft, MapPin, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AboutPage = () => {
@@ -122,7 +122,11 @@ const AboutPage = () => {
           {/* Instagram */}
           <a href="https://www.instagram.com/meyyakutty/" target="_blank" rel="noreferrer" className="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-xl border border-white/50 flex flex-col items-center justify-center text-center hover:scale-105 hover:bg-pink-50 transition-all group col-span-1">
             <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 flex items-center justify-center text-white mb-3 shadow-sm group-hover:shadow-md transition-shadow">
-              <Instagram size={28} />
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
             </div>
             <span className="font-black text-gray-800 text-sm">Instagram</span>
           </a>
@@ -130,7 +134,10 @@ const AboutPage = () => {
           {/* YouTube */}
           <a href="https://youtube.com/@meyyakutty9372?si=iHZEEa8tyZfw9gB3" target="_blank" rel="noreferrer" className="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-xl border border-white/50 flex flex-row items-center justify-center gap-4 text-center hover:scale-[1.02] hover:bg-red-50 transition-all group col-span-2">
             <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center text-red-600 shadow-sm group-hover:shadow-md transition-shadow shrink-0">
-              <Youtube size={32} />
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" />
+                <polygon fill="white" points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+              </svg>
             </div>
             <div className="flex flex-col items-start">
               <span className="font-black text-gray-800 text-sm md:text-base">Subscribe on YouTube</span>
