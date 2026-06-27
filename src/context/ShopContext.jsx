@@ -94,7 +94,15 @@ const initialPets = [
   { id: 'sup9', breed: 'Fish Bowl', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 500, imageUrl: '/images/clean/fish_accessories_fish_bowl.jpg', description: 'Glass Fish Bowl.', inStock: true, stockQuantity: 12 },
   { id: 'sup10', breed: 'Fish Net', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 100, imageUrl: '/images/clean/fish_accessories_fish_net.jpg', description: 'Aquarium Fish Net.', inStock: true, stockQuantity: 50 },
   { id: 'sup11', breed: 'Tank Heater', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 800, imageUrl: '/images/clean/fish_accessories_fisk_tank_heater.jpg', description: 'Aquarium Heater.', inStock: true, stockQuantity: 15 },
-  { id: 'sup12', breed: 'Tank Sand', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 250, imageUrl: '/images/clean/fish_tank_sand.jpg', description: 'Aquarium Sand.', inStock: true, stockQuantity: 40 }
+  { id: 'sup12', breed: 'Tank Sand', category: 'Supplies', subcategory: 'Fish Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 250, imageUrl: '/images/clean/fish_tank_sand.jpg', description: 'Aquarium Sand.', inStock: true, stockQuantity: 40 },
+
+  { id: 'sup13', breed: 'Bird Cage', category: 'Supplies', subcategory: 'Bird Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 1500, imageUrl: '/images/clean/bird_cage.jpg', description: 'Spacious Bird Cage.', inStock: true, stockQuantity: 10 },
+  { id: 'sup14', breed: 'Bird Seed Mix', category: 'Supplies', subcategory: 'Bird Supplies', gender: 'Food', ageMonths: 0, isVaccinated: false, price: 200, imageUrl: '/images/clean/bird_seed.jpg', description: 'Premium Bird Seed.', inStock: true, stockQuantity: 30 },
+
+  { id: 'sup15', breed: 'Hamster Wheel', category: 'Supplies', subcategory: 'Hamster Supplies', gender: 'Accessory', ageMonths: 0, isVaccinated: false, price: 350, imageUrl: '/images/clean/hamster_wheel.jpg', description: 'Silent Hamster Wheel.', inStock: true, stockQuantity: 20 },
+  { id: 'sup16', breed: 'Hamster Mix Food', category: 'Supplies', subcategory: 'Hamster Supplies', gender: 'Food', ageMonths: 0, isVaccinated: false, price: 250, imageUrl: '/images/clean/hamster_food.jpg', description: 'Nutritious Hamster Food.', inStock: true, stockQuantity: 25 },
+
+  { id: 'sup17', breed: 'Rabbit Pellet Food', category: 'Supplies', subcategory: 'Other Pet Supplies', gender: 'Food', ageMonths: 0, isVaccinated: false, price: 300, imageUrl: '/images/clean/rabbit_food.jpg', description: 'Healthy Rabbit Pellets.', inStock: true, stockQuantity: 15 }
 ];
 
 export const ShopProvider = ({ children }) => {
@@ -103,9 +111,10 @@ export const ShopProvider = ({ children }) => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        
         // Ensure new data struct replaces old one if categories don't match
         // Quick migration logic for "Small Animals" -> "Others"
-        return parsed.map(pet => {
+        let migrated = parsed.map(pet => {
           if (pet.category === 'Small Animals') {
             if (pet.breed === 'Hamster') {
               return { ...pet, category: 'Hamsters', subcategory: 'Hamsters' };
@@ -114,6 +123,12 @@ export const ShopProvider = ({ children }) => {
           }
           return pet;
         });
+
+        // Merge any new initialPets that aren't in local storage yet
+        const existingIds = new Set(migrated.map(p => p.id));
+        const missingInitial = initialPets.filter(p => !existingIds.has(p.id));
+        
+        return [...migrated, ...missingInitial];
       } catch (e) {
         console.error("Failed to parse pets from local storage");
       }
