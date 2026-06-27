@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useNotifications } from '../context/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 import { X, Bell, Package, Truck, Tag, Info } from 'lucide-react';
 import { gsap } from 'gsap';
 
 const NotificationDrawer = ({ isOpen, onClose }) => {
   const { notifications, markAllAsRead } = useNotifications();
+  const navigate = useNavigate();
   const drawerRef = useRef(null);
   const overlayRef = useRef(null);
 
@@ -25,6 +27,13 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
       case 'shipping': return <Truck size={20} className="text-green-500" />;
       case 'promo': return <Tag size={20} className="text-orange-500" />;
       default: return <Info size={20} className="text-gray-500" />;
+    }
+  };
+
+  const handleNotifClick = (type) => {
+    if (type === 'order' || type === 'shipping') {
+      navigate('/orders');
+      onClose();
     }
   };
 
@@ -64,7 +73,8 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
             notifications.map(notif => (
               <div 
                 key={notif.id}
-                className={`p-4 rounded-2xl border flex gap-4 items-start ${notif.read ? 'bg-white border-gray-100' : 'bg-red-50 border-red-100'}`}
+                onClick={() => handleNotifClick(notif.type)}
+                className={`p-4 rounded-2xl border flex gap-4 items-start cursor-pointer transition-colors ${notif.read ? 'bg-white border-gray-100 hover:bg-gray-50' : 'bg-red-50 border-red-100 hover:bg-red-100'}`}
               >
                 <div className={`p-3 rounded-full shrink-0 ${notif.read ? 'bg-gray-100' : 'bg-white shadow-sm'}`}>
                   {getIcon(notif.type)}
