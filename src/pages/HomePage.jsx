@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
-import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck, Rat } from 'lucide-react';
+import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck, Rat, Play, PlayCircle } from 'lucide-react';
 import { gsap } from 'gsap';
 import PetCard from '../components/PetCard';
 
@@ -19,6 +19,8 @@ const HomePage = () => {
   const { pets } = useShop();
   const navigate = useNavigate();
   const bannerRef = useRef(null);
+  
+  const [activeVideo, setActiveVideo] = useState('/videos/v1.mp4');
 
   useEffect(() => {
     // Banner continuous pulse
@@ -61,13 +63,6 @@ const HomePage = () => {
           <h2 className="text-2xl md:text-3xl font-black text-gray-900">
             "Today's Highlights & Offers"
           </h2>
-          <div 
-            onClick={() => navigate('/shop')}
-            className="flex items-center gap-1 text-[var(--color-brand-red)] font-bold cursor-pointer hover:underline text-sm md:text-base"
-          >
-            <span>'View All'</span>
-            <ArrowRight size={16} />
-          </div>
         </div>
         
         {/* Horizontal Scroll for Offers */}
@@ -153,35 +148,45 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Level 1: Categories */}
+      {/* Premium Video Player */}
       <div className="mb-16">
-        <h2 className="text-3xl font-black text-gray-900 mb-8 border-l-4 border-[var(--color-brand-red)] pl-4">
-          'Browse by Category'
+        <h2 className="text-3xl font-black text-gray-900 mb-8 border-l-4 border-[var(--color-brand-red)] pl-4 flex items-center gap-3">
+          <PlayCircle size={32} className="text-[var(--color-brand-red)]" /> 'MeeyaKutty Live Action'
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
-          {categories.map(cat => {
-            const representativeImage = pets.find(p => p.category === cat)?.imageUrl;
-            return (
-              <div 
-                key={cat} 
-                onClick={() => navigate(`/shop?category=${encodeURIComponent(cat)}`)}
-                className="relative h-56 rounded-[2rem] overflow-hidden cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+        
+        <div className="bg-black rounded-[2.5rem] p-4 shadow-2xl relative overflow-hidden border border-gray-800">
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80 pointer-events-none" />
+          
+          <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-gray-900 shadow-inner">
+            <video 
+              key={activeVideo} // forces reload when active video changes
+              src={activeVideo} 
+              autoPlay 
+              loop 
+              muted 
+              controls
+              controlsList="nodownload"
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          {/* Video Selector Carousel */}
+          <div className="mt-6 flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+            {['v1.mp4', 'v2.mp4', 'v3.mp4', 'v4.mp4', 'v5.mp4'].map((vid, idx) => (
+              <button 
+                key={vid}
+                onClick={() => setActiveVideo(`/videos/${vid}`)}
+                className={`shrink-0 relative w-40 h-24 rounded-2xl overflow-hidden transition-all duration-300 border-2 ${activeVideo === `/videos/${vid}` ? 'border-[var(--color-brand-red)] scale-105 shadow-[0_0_15px_rgba(200,16,46,0.5)]' : 'border-gray-800 opacity-60 hover:opacity-100 hover:border-gray-600'}`}
               >
-                {representativeImage ? (
-                  <img src={representativeImage} alt={cat} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-100 to-orange-100" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute inset-0 p-6 flex flex-col justify-end items-center text-center">
-                  <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white mb-3 shadow-lg border border-white/30 group-hover:bg-[var(--color-brand-red)] group-hover:scale-110 transition-all duration-300">
-                    {categoryIcons[cat] || <Compass size={28} />}
-                  </div>
-                  <h3 className="text-2xl font-black text-white drop-shadow-md">{cat}</h3>
-                </div>
-              </div>
-            );
-          })}
+                 {/* Provide thumbnail view by loading video and keeping it paused */}
+                 <video src={`/videos/${vid}#t=1`} className="w-full h-full object-cover" />
+                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                   <Play size={24} className={activeVideo === `/videos/${vid}` ? 'text-[var(--color-brand-red)]' : 'text-white'} fill="currentColor" />
+                 </div>
+                 <div className="absolute top-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded">Live Cam {idx + 1}</div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
