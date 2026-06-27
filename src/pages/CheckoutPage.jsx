@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { useShop } from '../context/ShopContext';
+import { useNotifications } from '../context/NotificationContext';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { CheckCircle2, ChevronRight, Loader2, ShieldCheck, MapPin, Phone, User, Store, CreditCard, X } from 'lucide-react';
@@ -10,6 +11,7 @@ const CheckoutPage = () => {
   const { cartItems, subtotal, tax, clearCart } = useCart();
   const { addOrder } = useOrders();
   const { updatePetStock } = useShop();
+  const { addNotification } = useNotifications();
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
@@ -140,6 +142,9 @@ const CheckoutPage = () => {
         updatePetStock(item.id, item.quantity, item.category === 'Supplies');
       });
       
+      // Dispatch Notification
+      addNotification('Order Confirmed!', `Your order #${order.id} has been confirmed and payment was successful.`, 'order');
+
       clearCart();
       navigate('/success', { state: { orderId: order.id } });
     }, 1000);
@@ -167,6 +172,9 @@ const CheckoutPage = () => {
         updatePetStock(item.id, item.quantity, item.category === 'Supplies');
       });
       
+      // Dispatch Notification
+      addNotification('Order Placed!', `Your order #${order.id} has been placed via Cash on Delivery.`, 'order');
+
       clearCart();
       navigate('/success', { state: { orderId: order.id } });
     }, 2000);

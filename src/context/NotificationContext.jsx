@@ -34,7 +34,23 @@ export const NotificationProvider = ({ children }) => {
     }
   ];
 
-  const [notifications, setNotifications] = useState(initialNotifications);
+  // Try to load from localStorage first
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem('meyyakutty_notifications');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse notifications", e);
+      }
+    }
+    return initialNotifications;
+  });
+
+  // Save to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('meyyakutty_notifications', JSON.stringify(notifications));
+  }, [notifications]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 

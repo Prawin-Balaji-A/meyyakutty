@@ -43,7 +43,7 @@ const InvoicePage = () => {
         <div className="flex justify-between items-start border-b-2 border-gray-200 pb-8 mb-8">
            <div className="flex items-center gap-4">
              <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-sm border border-gray-100 p-1">
-               <img src="/images/logo.png" alt="MeyyaKutty Logo" className="w-full h-full object-contain" />
+               <img src="/logo.jpg" alt="MeyyaKutty Logo" className="w-full h-full object-contain" />
              </div>
              <div>
                <h1 className="text-3xl font-black text-gray-900 tracking-tight">MeyyaKutty Pet Shop</h1>
@@ -74,10 +74,10 @@ const InvoicePage = () => {
           </div>
           <div className="w-1/2 text-right">
              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Company Info</h3>
-             <p className="font-black text-gray-900 text-lg mb-1">MeyyaKutty Inc.</p>
+             <p className="font-black text-gray-900 text-lg mb-1">Meyyakutty Pet shop</p>
              <p className="text-gray-600 text-sm leading-relaxed">
-               123 Pet Lovers Lane<br/>
-               Chennai, Tamil Nadu - 600001
+               opst, Mutthupillai Mandapam<br/>
+               Kumbakonam, Tamil Nadu 612201, India
              </p>
              <p className="text-gray-600 text-sm mt-2">Ph: +91 7200271113</p>
           </div>
