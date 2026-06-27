@@ -100,7 +100,7 @@ const OrderDetailsPage = () => {
         </div>
 
         {/* Glowing Tracking Timeline */}
-        <div className="bg-gray-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+        <div id="tracking-timeline" className="bg-gray-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-brand-red)]/30 rounded-full blur-[60px] -z-0 translate-x-1/3 -translate-y-1/3" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/20 rounded-full blur-[40px] -z-0 -translate-x-1/2 translate-y-1/2" />
           
@@ -261,7 +261,18 @@ const OrderDetailsPage = () => {
           
           <button 
             onClick={(e) => {
-              gsap.to(e.currentTarget, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1, onComplete: () => alert('Invoice Download feature coming soon!') });
+              gsap.to(e.currentTarget, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+              document.getElementById('tracking-timeline').scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex flex-col items-center justify-center gap-2 p-6 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-dark)] text-white rounded-[2rem] font-black transition-all shadow-lg active:scale-95"
+          >
+            <Navigation size={28} /> Track Order
+          </button>
+          
+          <button 
+            onClick={(e) => {
+              gsap.to(e.currentTarget, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+              window.open(`/invoice/${order.id}`, '_blank');
             }}
             className="flex flex-col items-center justify-center gap-2 p-6 bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-100 rounded-[2rem] font-black transition-all shadow-sm active:scale-95"
           >

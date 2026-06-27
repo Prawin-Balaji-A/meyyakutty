@@ -167,7 +167,8 @@ const OrderSuccessPage = () => {
           
           <button 
             onClick={(e) => {
-              gsap.to(e.currentTarget, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1, onComplete: () => alert('Invoice Download functionality coming soon!') });
+              gsap.to(e.currentTarget, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+              window.open(`/invoice/${order.id}`, '_blank');
             }}
             className="px-6 py-5 bg-white text-gray-700 border-2 border-gray-200 rounded-2xl font-black hover:bg-gray-50 hover:border-gray-300 transition-all text-lg flex items-center justify-center gap-2 active:scale-95"
           >

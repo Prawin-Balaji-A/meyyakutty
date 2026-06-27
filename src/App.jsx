@@ -10,6 +10,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
+import InvoicePage from './pages/InvoicePage';
 import AboutPage from './pages/AboutPage';
 import CartPage from './pages/CartPage';
 import { Phone, MessageCircle, Camera } from 'lucide-react';
@@ -32,6 +33,9 @@ function App() {
         {/* About page */}
         <Route path="about" element={<AboutPage />} />
       </Route>
+      
+      {/* Print-only routes outside of Layout */}
+      <Route path="/invoice/:id" element={<InvoicePage />} />
     </Routes>
   );
 }
