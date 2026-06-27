@@ -2,16 +2,34 @@ import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { useCart } from '../context/CartContext';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
 
 const PetCard = ({ pet }) => {
   const cardRef = useRef(null);
-  const { addToCart } = useCart();
+  const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
+
+  const cartItem = cartItems.find(i => i.id === pet.id);
 
   const handleBuyNow = (e) => {
     e.stopPropagation();
     addToCart(pet);
+  };
+  
+  const handleIncrease = (e) => {
+    e.stopPropagation();
+    if (cartItem.category === 'Supplies') {
+      updateQuantity(cartItem.id, cartItem.quantity + 1);
+    }
+  };
+
+  const handleDecrease = (e) => {
+    e.stopPropagation();
+    if (cartItem.quantity > 1) {
+      updateQuantity(cartItem.id, cartItem.quantity - 1);
+    } else {
+      removeFromCart(cartItem.id);
+    }
   };
 
   const handleCardClick = () => {
@@ -69,12 +87,34 @@ const PetCard = ({ pet }) => {
           </div>
         </div>
 
-        <button 
-          onClick={handleBuyNow}
-          className="w-full py-4 bg-gray-900 hover:bg-[var(--color-brand-red)] text-white rounded-xl font-bold text-lg shadow-md transition-colors flex items-center justify-center gap-2 active:scale-95"
-        >
-          <ShoppingCart size={20} /> Add to Cart
-        </button>
+        {cartItem ? (
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="w-full flex items-center justify-between bg-[var(--color-brand-red)] text-white rounded-xl font-bold shadow-md h-14 px-4 overflow-hidden"
+          >
+            <button 
+              onClick={handleDecrease}
+              className="p-2 bg-black/20 hover:bg-black/30 rounded-lg transition-colors active:scale-95 flex items-center justify-center"
+            >
+              {cartItem.quantity === 1 ? <Trash2 size={18} /> : <Minus size={18} />}
+            </button>
+            <span className="text-xl font-black">{cartItem.quantity}</span>
+            <button 
+              onClick={handleIncrease}
+              disabled={cartItem.category !== 'Supplies'}
+              className={`p-2 rounded-lg transition-colors active:scale-95 flex items-center justify-center ${cartItem.category !== 'Supplies' ? 'opacity-50 cursor-not-allowed' : 'bg-black/20 hover:bg-black/30'}`}
+            >
+              <Plus size={18} />
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={handleBuyNow}
+            className="w-full h-14 bg-gray-900 hover:bg-[var(--color-brand-red)] text-white rounded-xl font-bold text-lg shadow-md transition-colors flex items-center justify-center gap-2 active:scale-95"
+          >
+            <ShoppingCart size={20} /> Add to Cart
+          </button>
+        )}
       </div>
     </div>
   );

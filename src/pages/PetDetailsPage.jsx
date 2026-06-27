@@ -3,15 +3,33 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useCart } from '../context/CartContext';
 import { gsap } from 'gsap';
+import { ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
 
 const PetDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { pets } = useShop();
-  const { addToCart } = useCart();
+  const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
   const containerRef = useRef(null);
   
   const pet = pets.find(p => p.id === id);
+  const cartItem = cartItems.find(i => i?.id === id);
+
+  const handleIncrease = (e) => {
+    e.stopPropagation();
+    if (cartItem && cartItem.category === 'Supplies') {
+      updateQuantity(cartItem.id, cartItem.quantity + 1);
+    }
+  };
+
+  const handleDecrease = (e) => {
+    e.stopPropagation();
+    if (cartItem && cartItem.quantity > 1) {
+      updateQuantity(cartItem.id, cartItem.quantity - 1);
+    } else if (cartItem) {
+      removeFromCart(cartItem.id);
+    }
+  };
 
   useEffect(() => {
     gsap.fromTo(containerRef.current, 
@@ -68,26 +86,44 @@ const PetDetailsPage = () => {
               </p>
             </div>
           </div>
-          
-          <div className="mt-8 flex gap-4">
+          <div className="mt-8 flex gap-4 h-14">
+            {cartItem ? (
+              <div className="flex-1 flex items-center justify-between bg-[var(--color-brand-red)] text-white rounded-xl font-bold shadow-md px-4 overflow-hidden">
+                <button 
+                  onClick={handleDecrease}
+                  className="p-3 bg-black/20 hover:bg-black/30 rounded-lg transition-colors active:scale-95 flex items-center justify-center"
+                >
+                  {cartItem.quantity === 1 ? <Trash2 size={20} /> : <Minus size={20} />}
+                </button>
+                <span className="text-2xl font-black">{cartItem.quantity}</span>
+                <button 
+                  onClick={handleIncrease}
+                  disabled={cartItem.category !== 'Supplies'}
+                  className={`p-3 rounded-lg transition-colors active:scale-95 flex items-center justify-center ${cartItem.category !== 'Supplies' ? 'opacity-50 cursor-not-allowed' : 'bg-black/20 hover:bg-black/30'}`}
+                >
+                  <Plus size={20} />
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={(e) => {
+                  addToCart(pet);
+                  gsap.fromTo(e.currentTarget, 
+                    { scale: 0.95 },
+                    { scale: 1, duration: 0.4, ease: 'back.out' }
+                  );
+                }}
+                className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl flex items-center justify-center gap-2"
+              >
+                <ShoppingCart size={22} /> Add to Cart
+              </button>
+            )}
             <button 
               onClick={(e) => {
-                addToCart(pet);
-                gsap.fromTo(e.target, 
-                  { scale: 0.95 },
-                  { scale: 1, duration: 0.4, ease: 'back.out' }
-                );
-              }}
-              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl"
-            >
-              Add to Cart
-            </button>
-            <button 
-              onClick={(e) => {
-                addToCart(pet);
+                if (!cartItem) addToCart(pet);
                 navigate('/checkout');
               }}
-              className="flex-1 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl"
+              className="flex-1 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-dark)] text-white font-bold rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl"
             >
               Buy Now
             </button>

@@ -4,6 +4,7 @@ import { useOrders } from '../context/OrderContext';
 import { gsap } from 'gsap';
 import { CheckCircle, Package, Download, ShoppingBag, Truck, Calendar, CreditCard, Box } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { playSuccessSound } from '../utils/audioUtils';
 
 const OrderSuccessPage = () => {
   const location = useLocation();
@@ -24,6 +25,9 @@ const OrderSuccessPage = () => {
   const detailsRef = useRef(null);
 
   useEffect(() => {
+    // Play sound
+    playSuccessSound();
+
     // Confetti explosion
     const duration = 3500;
     const end = Date.now() + duration;

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { playCartSound } from '../utils/audioUtils';
 
 const CartContext = createContext();
 
@@ -20,6 +21,7 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (item) => {
+    playCartSound();
     setCartItems(prev => {
       const existing = prev.find(i => i.id === item.id);
       if (existing) {
