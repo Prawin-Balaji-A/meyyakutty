@@ -71,6 +71,32 @@ const AboutPage = () => {
           </div>
         </div>
 
+        {/* Find Us on Map */}
+        <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-gray-100 overflow-hidden">
+          <h2 className="text-2xl font-black text-gray-800 mb-6 flex items-center gap-3 border-b-2 border-gray-50 pb-4">
+            Find Us
+          </h2>
+          <div className="w-full h-64 md:h-96 rounded-2xl overflow-hidden shadow-inner relative bg-gray-100">
+            <iframe 
+              src="https://maps.google.com/maps?q=10.9558569,79.4047693&z=17&output=embed" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen="" 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0"
+              title="Meyyakutty Location"
+            />
+          </div>
+          <div className="mt-6 flex justify-between items-center">
+             <p className="text-gray-600 font-medium">Meyyakutty Chicken Corner</p>
+             <a href="https://www.google.com/maps/place/MEYYAKUTTY+CHICKEN+CORNER/@10.9558569,79.4047693,967m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a55338007452e75:0x3e23fabd9918c749!8m2!3d10.9558569!4d79.4047693!16s%2Fg%2F11w7hh5slq!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noreferrer" className="text-[var(--color-brand-red)] font-bold hover:underline">
+               Open in Maps &rarr;
+             </a>
+          </div>
+        </div>
+
         {/* Opening Hours */}
         <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
            <div className="absolute top-0 right-0 w-48 h-48 bg-orange-400/10 rounded-full blur-[40px] -z-0 translate-x-1/2 -translate-y-1/2" />
