@@ -143,7 +143,7 @@ const CheckoutPage = () => {
       });
       
       // Dispatch Notification
-      addNotification('Order Confirmed!', `Your order #${order.id} has been confirmed and payment was successful.`, 'order');
+      addNotification('Order Confirmed!', `Your order #${order.id} has been confirmed and payment was successful.`, 'order', `/orders/${order.id}`);
 
       clearCart();
       navigate('/success', { state: { orderId: order.id } });
@@ -173,7 +173,7 @@ const CheckoutPage = () => {
       });
       
       // Dispatch Notification
-      addNotification('Order Placed!', `Your order #${order.id} has been placed via Cash on Delivery.`, 'order');
+      addNotification('Order Placed!', `Your order #${order.id} has been placed via Cash on Delivery.`, 'order', `/orders/${order.id}`);
 
       clearCart();
       navigate('/success', { state: { orderId: order.id } });

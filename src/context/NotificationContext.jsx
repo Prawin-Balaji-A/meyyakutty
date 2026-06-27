@@ -58,14 +58,15 @@ export const NotificationProvider = ({ children }) => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const addNotification = (title, message, type = 'info') => {
+  const addNotification = (title, message, type = 'info', link = null) => {
     setNotifications(prev => [{
       id: Date.now(),
       title,
       message,
       time: 'Just now',
       read: false,
-      type
+      type,
+      link
     }, ...prev]);
   };
 

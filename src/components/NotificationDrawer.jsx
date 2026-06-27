@@ -30,8 +30,11 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleNotifClick = (type) => {
-    if (type === 'order' || type === 'shipping') {
+  const handleNotifClick = (notif) => {
+    if (notif.link) {
+      navigate(notif.link);
+      onClose();
+    } else if (notif.type === 'order' || notif.type === 'shipping') {
       navigate('/orders');
       onClose();
     }
@@ -73,7 +76,7 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
             notifications.map(notif => (
               <div 
                 key={notif.id}
-                onClick={() => handleNotifClick(notif.type)}
+                onClick={() => handleNotifClick(notif)}
                 className={`p-4 rounded-2xl border flex gap-4 items-start cursor-pointer transition-colors ${notif.read ? 'bg-white border-gray-100 hover:bg-gray-50' : 'bg-red-50 border-red-100 hover:bg-red-100'}`}
               >
                 <div className={`p-3 rounded-full shrink-0 ${notif.read ? 'bg-gray-100' : 'bg-white shadow-sm'}`}>
