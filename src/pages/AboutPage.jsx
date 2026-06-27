@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { Phone, Mail, Instagram, ChevronLeft, MapPin, Clock, MessageSquareText } from 'lucide-react';
+import { Phone, Mail, Instagram, ChevronLeft, MapPin, Clock, Youtube } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AboutPage = () => {
@@ -125,6 +125,17 @@ const AboutPage = () => {
               <Instagram size={28} />
             </div>
             <span className="font-black text-gray-800 text-sm">Instagram</span>
+          </a>
+
+          {/* YouTube */}
+          <a href="https://youtube.com/@meyyakutty9372?si=iHZEEa8tyZfw9gB3" target="_blank" rel="noreferrer" className="bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-xl border border-white/50 flex flex-row items-center justify-center gap-4 text-center hover:scale-[1.02] hover:bg-red-50 transition-all group col-span-2">
+            <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center text-red-600 shadow-sm group-hover:shadow-md transition-shadow shrink-0">
+              <Youtube size={32} />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-black text-gray-800 text-sm md:text-base">Subscribe on YouTube</span>
+              <span className="font-bold text-gray-500 text-xs mt-0.5">@meyyakutty9372</span>
+            </div>
           </a>
           
         </div>
