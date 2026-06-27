@@ -43,7 +43,7 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-3">
             <Bell size={24} className="text-[var(--color-brand-red)]" />
             <h2 className="text-xl font-black text-gray-800">
-              'Notifications'
+              Notifications
             </h2>
           </div>
           <button 
@@ -58,7 +58,7 @@ const NotificationDrawer = ({ isOpen, onClose }) => {
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
               <Bell size={48} className="mb-4 opacity-20" />
-              <p>'No notifications yet.'</p>
+              <p>No notifications yet.</p>
             </div>
           ) : (
             notifications.map(notif => (
