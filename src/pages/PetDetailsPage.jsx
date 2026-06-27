@@ -69,18 +69,29 @@ const PetDetailsPage = () => {
             </div>
           </div>
           
-          <button 
-            onClick={(e) => {
-              addToCart(pet);
-              gsap.fromTo(e.target, 
-                { scale: 0.9, backgroundColor: '#4ade80' },
-                { scale: 1, backgroundColor: 'var(--color-brand-red)', duration: 0.4, ease: 'back.out' }
-              );
-            }}
-            className="mt-8 w-full bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl"
-          >
-            Buy Now
-          </button>
+          <div className="mt-8 flex gap-4">
+            <button 
+              onClick={(e) => {
+                addToCart(pet);
+                gsap.fromTo(e.target, 
+                  { scale: 0.95 },
+                  { scale: 1, duration: 0.4, ease: 'back.out' }
+                );
+              }}
+              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl"
+            >
+              Add to Cart
+            </button>
+            <button 
+              onClick={(e) => {
+                addToCart(pet);
+                navigate('/checkout');
+              }}
+              className="flex-1 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-dark)] text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 text-xl"
+            >
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
     </div>

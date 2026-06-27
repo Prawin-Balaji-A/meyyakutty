@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
-import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck } from 'lucide-react';
+import { HeartPulse, ArrowRight, Fish, Dog, Cat, Bird, Package, Compass, ShieldCheck, ThumbsUp, Truck, Rat } from 'lucide-react';
 import { gsap } from 'gsap';
 import PetCard from '../components/PetCard';
 
@@ -10,7 +10,8 @@ const categoryIcons = {
   'Dogs': <Dog size={40} className="text-orange-500" />,
   'Cats': <Cat size={40} className="text-pink-500" />,
   'Birds': <Bird size={40} className="text-yellow-500" />,
-  'Small Animals': <Compass size={40} className="text-green-500" />,
+  'Hamsters': <Rat size={40} className="text-orange-400" />,
+  'Others': <Compass size={40} className="text-green-500" />,
   'Supplies': <Package size={40} className="text-purple-500" />
 };
 

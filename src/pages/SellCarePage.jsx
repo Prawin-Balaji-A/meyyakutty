@@ -12,7 +12,8 @@ const SearchablePetSelect = ({ value, onChange, error }) => {
     { id: 'Dog', icon: '🐶' },
     { id: 'Cat', icon: '🐱' },
     { id: 'Birds', icon: '🐦' },
-    { id: 'Hamster', icon: '🐹' },
+    { id: 'Fish', icon: '🐟' },
+    { id: 'Hamsters', icon: '🐹' },
     { id: 'Others', icon: '🐾' }
   ];
 
@@ -143,7 +144,7 @@ const SellCarePage = () => {
         if (!formData.age) newErrors.age = 'Age is required';
         if (!formData.gender) newErrors.gender = 'Gender is required';
         
-        if (['Dog', 'Cat', 'Hamster'].includes(formData.petType) && !formData.color) {
+        if (['Dog', 'Cat', 'Hamsters'].includes(formData.petType) && !formData.color) {
           newErrors.color = 'Color is required';
         }
         if (['Dog', 'Cat'].includes(formData.petType) && !formData.vaccinated) {
@@ -200,7 +201,7 @@ const SellCarePage = () => {
       if (cleanedData.petType !== 'Dog') delete cleanedData.trained;
       if (cleanedData.petType !== 'Cat') delete cleanedData.faceType;
       if (!['Dog', 'Cat'].includes(cleanedData.petType)) delete cleanedData.vaccinated;
-      if (!['Dog', 'Cat', 'Hamster'].includes(cleanedData.petType)) delete cleanedData.color;
+      if (!['Dog', 'Cat', 'Hamsters'].includes(cleanedData.petType)) delete cleanedData.color;
       if (cleanedData.petType !== 'Birds') {
         delete cleanedData.birdType;
         delete cleanedData.wingClipped;
@@ -344,7 +345,7 @@ const SellCarePage = () => {
                       {renderError('gender')}
                     </div>
 
-                    {['Dog', 'Cat', 'Hamster'].includes(formData.petType) && (
+                    {['Dog', 'Cat', 'Hamsters'].includes(formData.petType) && (
                       <div className="animate-fade-in">
                         <label className="block text-sm font-bold text-gray-700 mb-1">Color *</label>
                         <input type="text" name="color" value={formData.color || ''} onChange={handleInputChange} className={inputClass} />

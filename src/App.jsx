@@ -11,6 +11,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
 import AboutPage from './pages/AboutPage';
+import CartPage from './pages/CartPage';
 import { Phone, MessageCircle, Camera } from 'lucide-react';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="sell-care" element={<SellCarePage />} />
         <Route path="admin" element={<AdminDashboard />} />
         <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="cart" element={<CartPage />} />
         <Route path="success" element={<OrderSuccessPage />} />
         <Route path="orders" element={<MyOrdersPage />} />
         <Route path="orders/:id" element={<OrderDetailsPage />} />

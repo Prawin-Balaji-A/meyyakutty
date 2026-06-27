@@ -4,14 +4,12 @@ import { gsap } from 'gsap';
 import { useCart } from '../context/CartContext';
 import { useNotifications } from '../context/NotificationContext';
 import { MessageCircle, ShoppingCart, Home, Store, HeartHandshake, Info, Bell } from 'lucide-react';
-import CartDrawer from './CartDrawer';
 import NotificationDrawer from './NotificationDrawer';
 
 const Layout = () => {
   const { cartItems } = useCart();
   const { unreadCount } = useNotifications();
   const whatsappRef = useRef(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const location = useLocation();
 
@@ -81,8 +79,8 @@ const Layout = () => {
                 <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-white border border-[var(--color-brand-red)] rounded-full flex items-center justify-center -translate-y-1/4 translate-x-1/4 shadow-sm animate-pulse"></span>
               )}
             </button>
-            <button 
-              onClick={() => setIsCartOpen(true)}
+            <Link 
+              to="/cart"
               className="relative p-1 md:p-2 text-white hover:text-red-200 transition-colors"
             >
               <ShoppingCart size={22} className="md:w-6 md:h-6" />
@@ -91,7 +89,7 @@ const Layout = () => {
                   {cartItems.length}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -101,7 +99,6 @@ const Layout = () => {
         <Outlet />
       </main>
 
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <NotificationDrawer isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
 
       {/* Floating WhatsApp Button (Adjusted for bottom nav on mobile) */}

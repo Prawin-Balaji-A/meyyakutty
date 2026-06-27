@@ -1,13 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useOrders } from '../context/OrderContext';
+import { useShop } from '../context/ShopContext';
 import { gsap } from 'gsap';
-import { Truck, MapPin, PhoneCall, MessageCircle, FileText, ChevronLeft, Package, CheckCircle2, Clock, Map, Navigation } from 'lucide-react';
+import { Truck, MapPin, PhoneCall, MessageCircle, FileText, ChevronLeft, Package, CheckCircle2, Clock, Navigation, XCircle } from 'lucide-react';
 
 const OrderDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { orders } = useOrders();
+  const { orders, cancelOrder } = useOrders();
+  const { restorePetStock } = useShop();
   const containerRef = useRef(null);
   
   const order = orders.find(o => o.id === id);
@@ -30,7 +32,29 @@ const OrderDetailsPage = () => {
     );
   }
 
+  const handleCancelOrder = () => {
+    if (window.confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
+      cancelOrder(order.id);
+      // Restore stock for all items
+      order.items.forEach(item => {
+        restorePetStock(item.id, item.quantity, item.category === 'Supplies');
+      });
+      alert("Order cancelled successfully.");
+    }
+  };
+
   const primaryPhone = '917200271113';
+
+  // Tracking Logic
+  const allStatuses = ['Placed', 'Confirmed', 'Preparing', 'Shipped', 'Out for Delivery', 'Delivered'];
+  const isCancelled = order.status === 'Cancelled';
+  let currentIndex = allStatuses.indexOf(order.status);
+  
+  // Fallback for unexpected status
+  if (currentIndex === -1 && !isCancelled) currentIndex = 0; 
+  if (isCancelled) currentIndex = -1; // -1 means don't show normal progress
+
+  const canCancel = ['Placed', 'Confirmed', 'Preparing'].includes(order.status);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 w-full">
@@ -44,60 +68,115 @@ const OrderDetailsPage = () => {
       <div ref={containerRef} className="space-y-8">
         
         {/* Header Section */}
-        <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-xl border border-gray-100 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-green-400/10 rounded-full blur-[60px] -z-0 translate-x-1/2 -translate-y-1/2" />
+        <div className={`bg-white rounded-[2.5rem] p-8 md:p-10 shadow-xl border border-gray-100 relative overflow-hidden`}>
+          <div className={`absolute top-0 right-0 w-64 h-64 ${isCancelled ? 'bg-red-400/10' : 'bg-green-400/10'} rounded-full blur-[60px] -z-0 translate-x-1/2 -translate-y-1/2`} />
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
               <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Order ID</p>
               <h1 className="text-4xl font-black text-gray-900">{order.id}</h1>
               <p className="font-bold text-gray-500 mt-2 flex items-center gap-2">
-                <Clock size={16} /> Placed on {new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                <Clock size={16} /> Placed on {new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
-            <div className="bg-green-50 px-6 py-4 rounded-2xl border border-green-200 text-center">
-              <p className="text-sm font-bold text-green-600 uppercase tracking-wider mb-1">Current Status</p>
-              <p className="text-2xl font-black text-green-700 flex items-center justify-center gap-2">
-                <CheckCircle2 size={24} className="animate-pulse" /> {order.status}
+            
+            <div className={`px-6 py-4 rounded-2xl border text-center ${
+              isCancelled ? 'bg-red-50 border-red-200' : 
+              order.status === 'Delivered' ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'
+            }`}>
+              <p className={`text-sm font-bold uppercase tracking-wider mb-1 ${
+                isCancelled ? 'text-red-600' : 
+                order.status === 'Delivered' ? 'text-green-600' : 'text-blue-600'
+              }`}>Current Status</p>
+              
+              <p className={`text-2xl font-black flex items-center justify-center gap-2 ${
+                isCancelled ? 'text-red-700' : 
+                order.status === 'Delivered' ? 'text-green-700' : 'text-blue-700'
+              }`}>
+                {isCancelled ? <XCircle size={24} /> : <CheckCircle2 size={24} className={order.status !== 'Delivered' ? 'animate-pulse' : ''} />} 
+                {order.status}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Timeline & Delivery */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--color-brand-red)]/20 rounded-full blur-[40px] -z-0 translate-x-1/3 -translate-y-1/3" />
-            <h3 className="font-black text-2xl mb-6 relative z-10 flex items-center gap-3">
-              <Truck className="text-[var(--color-brand-red)]" /> Estimated Delivery
-            </h3>
-            <p className="text-xl font-bold text-gray-300 relative z-10 leading-relaxed mb-6">
-              Your order is being processed and will usually arrive in <span className="text-white bg-white/10 px-2 py-1 rounded-lg">3-5 Business Days</span>.
-            </p>
-            <div className="h-2 bg-gray-800 rounded-full relative z-10 overflow-hidden">
-              <div className="h-full bg-[var(--color-brand-red)] w-1/3 rounded-full animate-pulse" />
-            </div>
-            <div className="flex justify-between text-xs font-bold text-gray-400 mt-2 uppercase tracking-wider relative z-10">
-              <span>Confirmed</span>
-              <span>Packed</span>
-              <span>Delivered</span>
-            </div>
-          </div>
+        {/* Glowing Tracking Timeline */}
+        <div className="bg-gray-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-brand-red)]/30 rounded-full blur-[60px] -z-0 translate-x-1/3 -translate-y-1/3" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/20 rounded-full blur-[40px] -z-0 -translate-x-1/2 translate-y-1/2" />
+          
+          <h3 className="font-black text-3xl mb-12 relative z-10 flex items-center gap-3 tracking-tight drop-shadow-md">
+            <Navigation className="text-[var(--color-brand-red)] w-8 h-8" /> Live Order Tracking
+          </h3>
 
-          <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-gray-100 flex flex-col justify-between">
+          <div className="relative z-10 pb-4">
+            {isCancelled ? (
+              <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl backdrop-blur-sm text-center">
+                <XCircle size={48} className="text-red-500 mx-auto mb-4" />
+                <h4 className="text-2xl font-black text-red-400 mb-2">Order Cancelled</h4>
+                <p className="text-red-200 font-medium">This order has been cancelled and cannot be tracked.</p>
+              </div>
+            ) : (
+              <div className="relative">
+                {/* Background Line */}
+                <div className="absolute top-1/2 left-0 w-full h-2 bg-gray-800 -translate-y-1/2 rounded-full overflow-hidden shadow-inner">
+                   {/* Progress Line */}
+                   <div 
+                     className="h-full bg-gradient-to-r from-[var(--color-brand-red)] to-orange-400 rounded-full shadow-[0_0_15px_rgba(200,16,46,0.8)] transition-all duration-1000 ease-out" 
+                     style={{ width: `${Math.max(5, (currentIndex / (allStatuses.length - 1)) * 100)}%` }} 
+                   />
+                </div>
+
+                {/* Steps */}
+                <div className="flex justify-between relative z-10">
+                  {allStatuses.map((step, idx) => {
+                    const isCompleted = idx <= currentIndex;
+                    const isActive = idx === currentIndex;
+                    
+                    return (
+                      <div key={step} className="flex flex-col items-center group">
+                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-black text-sm md:text-base border-4 transition-all duration-500 ${
+                          isCompleted 
+                            ? 'bg-[var(--color-brand-red)] border-gray-900 text-white shadow-[0_0_20px_rgba(200,16,46,0.6)] scale-110' 
+                            : 'bg-gray-800 border-gray-700 text-gray-500'
+                        } ${isActive ? 'animate-pulse' : ''}`}>
+                          {isCompleted ? <CheckCircle2 size={20} /> : idx + 1}
+                        </div>
+                        <span className={`mt-4 text-[10px] md:text-xs font-black uppercase tracking-wider text-center max-w-[60px] md:max-w-[80px] transition-colors duration-500 ${
+                          isCompleted ? 'text-white drop-shadow-md' : 'text-gray-600'
+                        }`}>
+                          {step}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Delivery Details */}
+        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-gray-100">
+          <h3 className="font-black text-2xl text-gray-800 mb-6 flex items-center gap-3 border-b-2 border-gray-100 pb-4">
+            <MapPin className="text-[var(--color-brand-red)]" /> {order.deliveryMethod === 'pickup' ? 'Store Pickup Details' : 'Delivery Details'}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h3 className="font-black text-2xl text-gray-800 mb-6 flex items-center gap-3 border-b-2 border-gray-100 pb-4">
-                <MapPin className="text-[var(--color-brand-red)]" /> Delivery Details
-              </h3>
-              <p className="font-black text-gray-900 text-lg mb-2">{order.customer.fullName}</p>
-              <p className="text-gray-600 font-medium leading-relaxed mb-4">{order.customer.address}</p>
-              <p className="font-bold text-gray-700 flex items-center gap-2">
-                <PhoneCall size={16} className="text-gray-400" /> {order.customer.mobile}
+              <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Customer Info</p>
+              <p className="font-black text-gray-900 text-xl mb-1">{order.customer.fullName}</p>
+              <p className="font-bold text-gray-700 flex items-center gap-2 mb-4">
+                <PhoneCall size={16} className="text-[var(--color-brand-red)]" /> {order.customer.mobile}
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t-2 border-gray-100">
-              <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Payment Method</p>
-              <p className="font-black text-green-600">Cash on Delivery</p>
-            </div>
+            {order.deliveryMethod === 'delivery' && (
+              <div>
+                <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Shipping Address</p>
+                <p className="text-gray-700 font-medium leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  {order.customer.address}<br/>
+                  {order.customer.city} - {order.customer.pincode}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -128,22 +207,42 @@ const OrderDetailsPage = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-between items-end mt-10 pt-6 border-t-2 border-gray-100">
-             <span className="text-gray-500 font-bold uppercase tracking-wider">Total Amount</span>
-             <span className="text-4xl font-black text-gray-900">₹{order.total}</span>
+
+          <div className="mt-10 pt-6 border-t-2 border-gray-100 bg-gray-50 p-6 rounded-3xl">
+            <div className="space-y-3 mb-4 text-gray-600 font-bold">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span className="text-gray-900">₹{order.subtotal || order.total}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Delivery Charge</span>
+                <span className="text-gray-900">{order.deliveryFee === 0 ? 'Free' : `₹${order.deliveryFee}`}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Estimated Tax (5%)</span>
+                <span className="text-[var(--color-brand-red)]">₹{order.tax || 0}</span>
+              </div>
+            </div>
+            <div className="flex justify-between items-end pt-4 border-t border-gray-200">
+               <div>
+                 <span className="text-gray-500 font-bold uppercase tracking-wider block">Grand Total</span>
+                 <span className="text-xs text-gray-400 font-medium">Paid via {order.paymentMethod || 'Cash on Delivery'}</span>
+               </div>
+               <span className="text-4xl font-black text-gray-900 tracking-tight">₹{order.total}</span>
+            </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button 
-            onClick={(e) => {
-              gsap.to(e.currentTarget, { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1, onComplete: () => alert('Tracking system integration coming soon!') });
-            }}
-            className="flex flex-col items-center justify-center gap-2 p-6 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-dark)] text-white rounded-[2rem] font-black transition-all shadow-lg active:scale-95"
-          >
-            <Navigation size={28} /> Track Order
-          </button>
+          {canCancel && !isCancelled && (
+            <button 
+              onClick={handleCancelOrder}
+              className="flex flex-col items-center justify-center gap-2 p-6 bg-white hover:bg-red-50 text-red-600 border-2 border-red-100 rounded-[2rem] font-black transition-all shadow-sm active:scale-95"
+            >
+              <XCircle size={28} /> Cancel Order
+            </button>
+          )}
           
           <a 
             href={`tel:${primaryPhone}`}
