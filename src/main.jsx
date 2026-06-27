@@ -8,6 +8,7 @@ import { AdminProvider } from './context/AdminContext.jsx'
 import { ShopProvider } from './context/ShopContext.jsx'
 import { CartProvider } from './context/CartContext.jsx'
 import { OrderProvider } from './context/OrderContext.jsx'
+import { NotificationProvider } from './context/NotificationContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')).render(
           <ShopProvider>
             <CartProvider>
               <OrderProvider>
-                <App />
+                <NotificationProvider>
+                  <App />
+                </NotificationProvider>
               </OrderProvider>
             </CartProvider>
           </ShopProvider>

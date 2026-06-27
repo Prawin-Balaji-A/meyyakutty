@@ -3,15 +3,19 @@ import { Outlet, Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
-import { MessageCircle, ShoppingCart, Home, Store, HeartHandshake, Info } from 'lucide-react';
+import { useNotifications } from '../context/NotificationContext';
+import { MessageCircle, ShoppingCart, Home, Store, HeartHandshake, Info, Bell } from 'lucide-react';
 import CartDrawer from './CartDrawer';
+import NotificationDrawer from './NotificationDrawer';
 import { useLocation } from 'react-router-dom';
 
 const Layout = () => {
   const { lang, toggleLang } = useLanguage();
   const { cartItems } = useCart();
+  const { unreadCount } = useNotifications();
   const whatsappRef = useRef(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -53,7 +57,7 @@ const Layout = () => {
               MEYYAKUTTY
             </span>
           </Link>
-          {/* Desktop Nav */}
+          {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-8">
             <Link to="/" className="font-bold text-white hover:text-red-200 transition-colors">
               {lang === 'en' ? 'Home' : 'முகப்பு'}
@@ -67,24 +71,37 @@ const Layout = () => {
             <Link to="/about" className="font-bold text-white hover:text-red-200 transition-colors">
               {lang === 'en' ? 'About Us' : 'எங்களை பற்றி'}
             </Link>
+          </nav>
+
+          {/* Action Icons (Visible on all screens) */}
+          <div className="flex items-center gap-3 md:gap-6">
             <button 
               onClick={toggleLang}
-              className="px-3 py-1 bg-white text-[var(--color-brand-red)] rounded-full font-black text-xs shadow-sm hover:bg-gray-100 transition-colors"
+              className="px-3 py-1 bg-white/20 text-white border border-white/50 rounded-full font-black text-xs shadow-sm hover:bg-white hover:text-[var(--color-brand-red)] transition-colors"
             >
               {lang === 'en' ? 'TA' : 'EN'}
             </button>
             <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-white hover:text-red-200 transition-colors"
+              onClick={() => setIsNotifOpen(true)}
+              className="relative p-1 md:p-2 text-white hover:text-red-200 transition-colors"
             >
-              <ShoppingCart size={24} />
+              <Bell size={22} className="md:w-6 md:h-6" />
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-white border border-[var(--color-brand-red)] rounded-full flex items-center justify-center -translate-y-1/4 translate-x-1/4 shadow-sm animate-pulse"></span>
+              )}
+            </button>
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-1 md:p-2 text-white hover:text-red-200 transition-colors"
+            >
+              <ShoppingCart size={22} className="md:w-6 md:h-6" />
               {cartItems.length > 0 && (
-                <span className="absolute top-0 right-0 w-5 h-5 bg-white text-[var(--color-brand-red)] text-xs font-bold rounded-full flex items-center justify-center -translate-y-1/4 translate-x-1/4 shadow-sm">
+                <span className="absolute top-0 right-0 w-4 h-4 bg-white text-[var(--color-brand-red)] text-[10px] font-bold rounded-full flex items-center justify-center -translate-y-1/4 translate-x-1/4 shadow-sm">
                   {cartItems.length}
                 </span>
               )}
             </button>
-          </nav>
+          </div>
         </div>
       </header>
 
@@ -94,6 +111,7 @@ const Layout = () => {
       </main>
 
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <NotificationDrawer isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
 
       {/* Floating WhatsApp Button (Adjusted for bottom nav on mobile) */}
       <button
