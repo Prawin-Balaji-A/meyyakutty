@@ -9,8 +9,8 @@ export const playCartSound = () => {
     osc.frequency.setValueAtTime(600, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
     
-    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+    gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.1);
     
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
@@ -35,8 +35,8 @@ export const playSuccessSound = () => {
       osc.frequency.value = freq;
       
       gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(0.15, startTime + 0.05);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+      gainNode.gain.linearRampToValueAtTime(0.4, startTime + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.05, startTime + duration);
       
       osc.connect(gainNode);
       gainNode.connect(ctx.destination);

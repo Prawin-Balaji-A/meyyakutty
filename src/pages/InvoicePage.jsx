@@ -42,8 +42,8 @@ const InvoicePage = () => {
         {/* Invoice Header */}
         <div className="flex justify-between items-start border-b-2 border-gray-200 pb-8 mb-8">
            <div className="flex items-center gap-4">
-             <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-black text-xl">
-               M
+             <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-sm border border-gray-100 p-1">
+               <img src="/images/logo.png" alt="MeyyaKutty Logo" className="w-full h-full object-contain" />
              </div>
              <div>
                <h1 className="text-3xl font-black text-gray-900 tracking-tight">MeyyaKutty Pet Shop</h1>

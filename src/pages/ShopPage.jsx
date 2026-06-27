@@ -70,10 +70,8 @@ const ShopPage = () => {
     const subs = [...new Set(filtered.map(p => p.subcategory))].filter(Boolean);
     
     if (selectedCategory === 'Supplies') {
-       // Just in case empty categories need to show up, we could hardcode them, 
-       // but prompt says "Products must load dynamically from the database with no hardcoded data."
-       // It also says "If a category has no products, show a professional empty state".
-       // So we MUST load the actual dynamic subcategories from the context data.
+       const predefined = ['Dog Supplies', 'Cat Supplies', 'Bird Supplies', 'Fish Supplies', 'Hamster Supplies', 'Other Pet Supplies'];
+       return [...new Set([...predefined, ...subs])];
     }
     
     return subs;

@@ -1,16 +1,90 @@
 import React, { useState } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { useOrders } from '../context/OrderContext';
-import { Check, X, Package, HeartPulse } from 'lucide-react';
+import { useShop } from '../context/ShopContext';
+import { Check, X, Package, HeartPulse, Box, Plus, Edit2, Trash2 } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { requests, updateRequestStatus } = useAdmin();
   const { orders, updateOrderStatus } = useOrders();
+  const { pets, addPet, updatePet, deletePet } = useShop();
   
-  const [activeTab, setActiveTab] = useState('orders'); // 'orders' or 'requests'
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'requests', 'supplies'
+  
+  // Supplies Management State
+  const supplyCategories = ['Dog Supplies', 'Cat Supplies', 'Bird Supplies', 'Fish Supplies', 'Hamster Supplies', 'Other Pet Supplies'];
+  const [activeSupplyCat, setActiveSupplyCat] = useState('Dog Supplies');
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [formData, setFormData] = useState({
+    breed: '',
+    price: '',
+    stockQuantity: '',
+    imageUrl: '',
+    description: ''
+  });
 
   const handleStatusChange = (orderId, e) => {
     updateOrderStatus(orderId, e.target.value);
+  };
+
+  const suppliesList = pets.filter(p => p.category === 'Supplies' && p.subcategory === activeSupplyCat);
+
+  const handleEdit = (product) => {
+    setEditingProduct(product.id);
+    setFormData({
+      breed: product.breed,
+      price: product.price,
+      stockQuantity: product.stockQuantity || 0,
+      imageUrl: product.imageUrl,
+      description: product.description
+    });
+    setIsAdding(false);
+  };
+
+  const handleAdd = () => {
+    setEditingProduct(null);
+    setFormData({ breed: '', price: '', stockQuantity: '', imageUrl: '', description: '' });
+    setIsAdding(true);
+  };
+
+  const handleCancelForm = () => {
+    setEditingProduct(null);
+    setIsAdding(false);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveProduct = (e) => {
+    e.preventDefault();
+    const productData = {
+      ...formData,
+      price: Number(formData.price),
+      stockQuantity: Number(formData.stockQuantity),
+      category: 'Supplies',
+      subcategory: activeSupplyCat,
+      gender: 'Accessory',
+      ageMonths: 0,
+      isVaccinated: false
+    };
+
+    if (isAdding) {
+      addPet(productData);
+    } else if (editingProduct) {
+      updatePet(editingProduct, productData);
+    }
+    
+    setEditingProduct(null);
+    setIsAdding(false);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deletePet(id);
+    }
   };
 
   return (
@@ -18,29 +92,34 @@ const AdminDashboard = () => {
       <h1 className="text-4xl font-black text-gray-800 mb-8">Admin Dashboard</h1>
       
       {/* Tabs */}
-      <div className="flex gap-4 mb-8">
+      <div className="flex flex-wrap gap-4 mb-8">
         <button 
           onClick={() => setActiveTab('orders')}
           className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition-all ${
-            activeTab === 'orders' 
-              ? 'bg-[var(--color-brand-red)] text-white shadow-lg' 
-              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+            activeTab === 'orders' ? 'bg-[var(--color-brand-red)] text-white shadow-lg' : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
           }`}
         >
           <Package size={20} /> Manage Orders
         </button>
         <button 
+          onClick={() => setActiveTab('supplies')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition-all ${
+            activeTab === 'supplies' ? 'bg-[var(--color-brand-red)] text-white shadow-lg' : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+          }`}
+        >
+          <Box size={20} /> Manage Supplies
+        </button>
+        <button 
           onClick={() => setActiveTab('requests')}
           className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition-all ${
-            activeTab === 'requests' 
-              ? 'bg-[var(--color-brand-red)] text-white shadow-lg' 
-              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+            activeTab === 'requests' ? 'bg-[var(--color-brand-red)] text-white shadow-lg' : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
           }`}
         >
           <HeartPulse size={20} /> Service Requests
         </button>
       </div>
       
+      {/* Orders Tab */}
       {activeTab === 'orders' && (
         <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-gray-100">
           <div className="p-8 border-b border-gray-100 bg-gray-50">
@@ -112,6 +191,108 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* Supplies Tab */}
+      {activeTab === 'supplies' && (
+        <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-gray-100 flex flex-col lg:flex-row min-h-[60vh]">
+          {/* Sidebar Categories */}
+          <div className="w-full lg:w-1/4 bg-gray-50 border-r border-gray-100 p-6 flex flex-col gap-2">
+            <h3 className="font-black text-gray-900 text-lg mb-4 px-2">Categories</h3>
+            {supplyCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => { setActiveSupplyCat(cat); handleCancelForm(); }}
+                className={`text-left px-4 py-3 rounded-xl font-bold transition-colors ${activeSupplyCat === cat ? 'bg-[var(--color-brand-red)] text-white shadow-md' : 'text-gray-600 hover:bg-gray-200'}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          
+          {/* Content Area */}
+          <div className="flex-1 p-8">
+            <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+              <h2 className="text-3xl font-black text-gray-900">{activeSupplyCat}</h2>
+              {!isAdding && !editingProduct && (
+                <button onClick={handleAdd} className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl font-bold hover:bg-black transition-colors">
+                  <Plus size={20} /> Add Product
+                </button>
+              )}
+            </div>
+
+            {(isAdding || editingProduct) ? (
+              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200 animate-fade-in">
+                <h3 className="text-xl font-black text-gray-800 mb-6">{isAdding ? 'Add New Product' : 'Edit Product'}</h3>
+                <form onSubmit={handleSaveProduct} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-600 mb-1 uppercase">Product Name *</label>
+                      <input required type="text" name="breed" value={formData.breed} onChange={handleFormChange} className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-[var(--color-brand-red)] outline-none" placeholder="e.g. Dog Food Bowl" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-600 mb-1 uppercase">Price (₹) *</label>
+                      <input required type="number" name="price" value={formData.price} onChange={handleFormChange} className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-[var(--color-brand-red)] outline-none" placeholder="Price" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-600 mb-1 uppercase">Stock Quantity *</label>
+                      <input required type="number" name="stockQuantity" value={formData.stockQuantity} onChange={handleFormChange} className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-[var(--color-brand-red)] outline-none" placeholder="Quantity" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-600 mb-1 uppercase">Image URL</label>
+                      <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleFormChange} className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-[var(--color-brand-red)] outline-none" placeholder="/images/clean/..." />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-600 mb-1 uppercase">Description</label>
+                    <textarea name="description" rows="3" value={formData.description} onChange={handleFormChange} className="w-full p-3 rounded-lg border-2 border-gray-200 focus:border-[var(--color-brand-red)] outline-none" placeholder="Product details..."></textarea>
+                  </div>
+                  
+                  <div className="flex justify-end gap-3 pt-4">
+                    <button type="button" onClick={handleCancelForm} className="px-6 py-3 font-bold text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit" className="px-6 py-3 font-bold text-white bg-green-500 hover:bg-green-600 rounded-xl transition-colors shadow-md">
+                       {isAdding ? 'Save New Product' : 'Update Product'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div>
+                {suppliesList.length === 0 ? (
+                  <div className="text-center py-16 text-gray-400 font-bold text-lg">No products found in {activeSupplyCat}.</div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {suppliesList.map(prod => (
+                      <div key={prod.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow flex flex-col group">
+                        <div className="h-40 bg-gray-100 overflow-hidden relative">
+                          <img src={prod.imageUrl || '/api/placeholder/400/300'} alt={prod.breed} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                          <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-md text-xs font-black shadow-sm">
+                            Stock: <span className={prod.stockQuantity > 5 ? 'text-green-600' : 'text-red-500'}>{prod.stockQuantity || 0}</span>
+                          </div>
+                        </div>
+                        <div className="p-4 flex-1 flex flex-col justify-between">
+                          <div>
+                            <h4 className="font-black text-gray-900 text-lg mb-1 line-clamp-1">{prod.breed}</h4>
+                            <p className="text-[var(--color-brand-red)] font-bold text-lg">₹{prod.price}</p>
+                          </div>
+                          <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100">
+                            <button onClick={() => handleEdit(prod)} className="flex-1 flex items-center justify-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg font-bold text-sm transition-colors">
+                              <Edit2 size={16} /> Edit
+                            </button>
+                            <button onClick={() => handleDelete(prod.id)} className="flex-1 flex items-center justify-center gap-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-lg font-bold text-sm transition-colors">
+                              <Trash2 size={16} /> Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Service Requests Tab */}
       {activeTab === 'requests' && (
         <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-gray-100">
           <div className="p-8 border-b border-gray-100 bg-gray-50">

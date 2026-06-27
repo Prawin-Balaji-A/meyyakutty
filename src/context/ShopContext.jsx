@@ -153,8 +153,20 @@ export const ShopProvider = ({ children }) => {
     }));
   };
 
+  const addPet = (newPet) => {
+    setPets(prev => [{ ...newPet, id: `prod_${Math.random().toString(36).substr(2, 9)}`, inStock: true }, ...prev]);
+  };
+
+  const updatePet = (id, updatedPet) => {
+    setPets(prev => prev.map(pet => pet.id === id ? { ...pet, ...updatedPet } : pet));
+  };
+
+  const deletePet = (id) => {
+    setPets(prev => prev.filter(pet => pet.id !== id));
+  };
+
   return (
-    <ShopContext.Provider value={{ pets, setPets, updatePetStock, restorePetStock }}>
+    <ShopContext.Provider value={{ pets, setPets, updatePetStock, restorePetStock, addPet, updatePet, deletePet }}>
       {children}
     </ShopContext.Provider>
   );
